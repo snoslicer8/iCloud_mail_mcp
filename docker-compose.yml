@@ -1,0 +1,23 @@
+services:
+  icloud-mail-mcp:
+    build: .
+    container_name: icloud-mail-mcp
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "3456:3456"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3456/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+
+### OPTIONAL: Setup a Cloudflare tunnel for your client to reach the host
+
+#  cloudflared:
+#    image: cloudflare/cloudflared:latest
+#    container_name: cloudflared-mcp
+#    restart: unless-stopped
+#    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
